@@ -10,4 +10,4 @@ Az egész egy YouTube csatorna létrehozásával kezdődött el (https://www.you
 ##### Itt csak matematikai tananyagok fognak szerepelni (többnyire azoknak is inkább az elméleti részük).
 
 #### Formátum:
-Minden egyes kis témakör (mely kb. egy YouTube videó tartalmát fedné le) egy-egy PDF formájában fog itt megjelenni. A PDF fájlok LaTeX segítségével készülnek.
+Minden egyes kis témakör (mely kb. egy YouTube videó tartalmát fedné le) egy-egy PDF formájában fog itt megjelenni. A PDF fájlok digitális rajztábla segítségével készülnek.
