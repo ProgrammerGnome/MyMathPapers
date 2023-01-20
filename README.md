@@ -1,4 +1,4 @@
-# MyMathJournal
+# MyMathPapers
 ### [Hungarian]
 ### Egy dokumentumok tárolására szolgáló repo az általam feldolgozott matematikai ismeretek részére.
 
