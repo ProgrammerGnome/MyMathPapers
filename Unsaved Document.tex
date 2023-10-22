@@ -1,0 +1,208 @@
+\documentclass[12pt]{article}
+    \title{\textbf{Formális nyelvek}}
+    \author{Kidolgozott gyakorlati példák \\ (Szerkesztés alatt álló példatár)}
+    \date{}
+\usepackage[a4paper,
+            left=0.5in,
+            right=0.5in,
+            top=0.5in,
+            bottom=0.5in,
+            footskip=.25in]{geometry}
+\begin{document}
+
+\maketitle
+
+\section{Mely nyelveket generálják az alábbi grammatikák? \\ Adjuk meg a grammatikák típusait is!}
+
+
+\subsection{Feladat: \\
+$ G=< \{0,1\}, \{S,A,B\}, S, \{ S \rightarrow 01S|1A,\ A \rightarrow B0,\ B \rightarrow 1 \}> $}
+\maketitle
+\subsection{Megoldás}
+A $ S \rightarrow 01S $ szabállyal a '01' stringek számát tudjuk növelni. Majd ha ezt meguntuk, 
+az $ S \rightarrow (01)^n1A \vdash (01)^n1B0 \vdash (01)^n110 $ levezetés az egyetlen amivel folytatni tudjuk 
+a generálást. Lezárni a generálást csak az $ B \rightarrow 0 $ szabály alkalmazásával tudjuk. \\\\
+Tehát a keresett nyelv a következő:
+$$ L = \{ \ (01)^n110, \ ahol \ n \in \mathbf{N}  \ \} $$
+A G(L) pedig 2-es típusú, azaz környezetfüggetlen, mivel alakja: \\
+$ A \rightarrow \omega \ , ahol \ \omega \in (V \cup W)^* , \ valamint \ A \in W^*. $
+
+\subsection{Feladat: \\
+$ G=< \{0,1\}, \{S,A,B\}, S, \{ S \rightarrow 0A,\ A \rightarrow 0A|1A|0B|1B,\ B \rightarrow 1B0|10 \}> $}
+\maketitle
+\subsection{Megoldás}
+Kezdetben az $ S \rightarrow 0A $\ szabályt tudjuk csak alkalmazni, ezután viszont választhatunk A és B
+generálási irány közül. 
+Először válasszuk A irányt: $ 0A \vdash 00A| 01A \ ... $ használatával az első '0' string után
+'0'-at vagy '1'-eseket generálhatunk tetszőleges sorrendben és mennyiségben, ez formalizálva így néz ki:
+$ 0 \{0,1\}^* $. Ezek után a B irány maradt, ami először egyetlen darab '0'-t vagy '1'-et ad az eddigi string-hez.
+A $ B \rightarrow 1B0 $ szabály a bal oldalon az '1'-esek, jobb oldalon a '0'-ák számát tudja növelni
+azonos mértékben. Viszont zárásképp '10'-val zárhatunk, ami jó, hiszen ez nem borítja fel az imént leírt
+szabályszerűséget. Így most tovább írhatjuk az eddig feltárt $ 0 \{0,1\}^* $ összefüggést:
+$ 0 \{0,1\}^*1^m 0^m $. Ámde mert A-ból B-be el kell jutnunk valahogy amit csak egy '0' vagy '1' automatikus
+hozzáadásával tehetünk meg, így a képlet $ \{0,1\}^* $ részénél ki kell vennünk az üres szót:
+$ \{0,1\}^* \setminus \epsilon $. \\\\ 
+Így a keresett nyelv végül a következőképp alakul:
+$$ 0 \alpha 1^m 0^m \ | \ \alpha \in \{0,1\}^*\setminus\epsilon \ , \ m \in \mathbf{N}, \ m\geq 1 $$
+A G(L) 2-es típusú grammatika. Indoklás a rész legelső feladatánál.
+
+
+\section{Készítsünk reguláris grammatikákat az alábbi nyelvekhez!}
+\subsection{Feladat: \\
+$ L=\{ \alpha \in \{ 0,1 \}^* \ | \ \alpha-ra \ igaz \ X \} $ \\
+Ahol X az, hogy: nem kezdődik egyessel vagy nem végződik nullára.}
+\maketitle
+\subsection{Megoldás}
+Először is nézzük végig a lehetséges eseteket: 0x0; 0x1; 1x0; 1x1
+(itt az x bármilyen és bármennyi véges V*-beli string-et jelöl).
+A 'vagy'-al öszekötött állítások igazságértéke csak akkor hamisak ha mindkét állítás hamis.
+Ebből az adódik, hogy 0x1 kivételével az összes eset megengedett. \\\\
+A grammatika tehát így néz ki: \\
+$$ G=<\{ \{0,1\}, \{S,A,B \}, S, \{ S \rightarrow 0|1|1A|0B, \ A \rightarrow 0|1|0A|1A, \ B 
+\rightarrow 0B|1B|1 \} \}> $$
+A működésének magyarázata esetszétválasztással egyszerűen elintézhető. A kezdőszimbólumból való távozások
+közül az B jelöli, hogy egyessel csak végezhetünk ($ B \rightarrow 1 $), 
+A pedig hogy bármivel ($ A \rightarrow 0|1 $).
+Az $ A \rightarrow 0A|1A $ pedig azt biztosítja, hogyha a kezdő -és zárószimbólum közt bármilyen 
+string lehessen, ugyanígy a $ B \rightarrow 0B|1B $
+esetnél is.
+
+\subsection{Feladat: \\
+$ L=\{ \alpha \in \{ a,b \}^* \ | \ \alpha-ra \ igaz \ X \} $ \\
+Ahol X az, hogy: első és utolsó betűje különbözik.}
+\maketitle
+\subsection{Megoldás}
+Először is nézzük végig a lehetséges eseteket: axa; axb; bxa; bxb. Ebből rögtön ki tudjuk szűrni mi kell nekünk:
+axb és bxa (itt az x bármilyen és bármennyi véges V*-beli string-et jelöl).
+Ezek alapján az előző feladat mintájára tudjuk megkonstruálni a grammatikánkat:
+$$ G=<\{ \{a,b\}, \{S,A,B \}, S,
+\{ S \rightarrow aB|bA|\epsilon, \ B \rightarrow aB|bB|b, \ A \rightarrow aA|bA|a. \} \}> $$
+A működésének magyarázata igen egyszerű és hasonló az előző feladatéhoz:
+esetszétválasztást használunk itt is. A B irány it a a-val való kezdést és b-vel való zárást takarja.
+Az A irány pedig a fordítottját, azaz a b-vel való kezdést és a-val történő lezárást.
+Az $ A \rightarrow aA|bA $ pedig azt biztosítja, hogyha a kezdő -és zárószimbólum közt bármilyen 
+string lehessen, ugyanígy a $ B \rightarrow aB|bB $ esetnél is.
+
+\section{Készítsünk (bármilyen) grammatikákat az alábbi nyelvekhez!}
+\subsection{Feladat: \\
+$ L=\{ a^{2n}b^{3n}ab, \ n \in \mathbf{N} \} $}
+\maketitle
+\subsection{Megoldás}
+Ezt a feladatot sajnos nem tudjuk reguláris grammatikával megoldani, amit készíteni fogunk az \\
+környezetfüggetlen lesz. Az ötletünk a következő: $ S \rightarrow aaAbbbab, \ A \rightarrow aaAbbb|aabbb $.
+Ezzel először S-ből átmegyünk A-ba, ami azért van mert nem szeretnénk a szó végi 'ab' generálását a szó
+belsejében ismételgetni. A-ból viszont véges sokszor tudjuk a szó belsejében az 'aabbb'-k generálását
+ismételgetni a $ A \rightarrow aaAbbb $ szabály alkalmazásával. Ha mindezt meguntuk, akkor
+a $ A \rightarrow aabbb $ szabállyal zárunk. De ne feledkezzünk meg arról sem, hogy az 'aabbbab' és 'ab'
+szavakat is tudnia kell generálnia a grammatikánknak, ezt a $ S \rightarrow aabbbab|ab $ szabályok biztosítják.
+Így végül a következő grammatika lesz a megoldás:
+$$ G=<\{ \{a,b \}, \{S,A \}, S, \{ S \rightarrow aaAbbbab|aabbbab|ab, \ A \rightarrow aaAbbb|aabbb \} \}> $$
+
+\subsection{Feladat: \\
+$ L=\{ 10^{3k}1^{2k}0, \ k \in \mathbf{N} \} $}
+\maketitle
+\subsection{Megoldás}
+A megoldásnál itt is hasonlóan járunk el, mint az előző esetben, szintén környezetfüggetlen grammatikát gyártunk.
+Az ötletünk a következő: $ S \rightarrow 000A11, \ A \rightarrow 000A11|00011 $.
+Ezzel először S-ből átmegyünk A-ba, ami azért van mert nem szeretnénk a szó eleji '1' és szóvégi '0' 
+generálását a szó belsejében ismételgetni. A-ból viszont véges sokszor tudjuk a szó belsejében az '00011'-k
+generálását ismételgetni a $ A \rightarrow 00A11 $ szabály alkalmazásával. Ha mindezt meguntuk, akkor
+a $ A \rightarrow 00011 $ szabállyal zárunk. De ne feledkezzünk meg arról sem, hogy az '1000110' és '10'
+szavakat is tudnia kell generálnia a grammatikánknak, ezt a $ S \rightarrow 1000110|10 $ szabályok biztosítják.
+Így végül a következő grammatika lesz a megoldás:
+$$ G=<\{ \{0,1 \}, \{S,A \}, S, \{ S \rightarrow 1000A110|1000110|10, \ A \rightarrow 000A11|00011 \} \}> $$
+
+\section{Formális nyelvek metszete, tükörképe és iteráltja}
+\subsection{Feladat: \\
+$ Legyen \ L_{1}=\{ ab^{n} \ : \ n \in \mathbf{N} \}, \ L_{2}=\{ a^{n}b \ : \ n \in \mathbf{N} \} .$ \\
+a) $ L_{1} \cup L_{2} = ?, \ valamint\ L_{1} \cap L_{2} = ? $ \\
+b) $ Az \ L_{1}^{*} = \{\alpha^{-1} \ : \ \alpha \in L_{2} \} \ jelolessel, \ L_{1}*L_{2}^{-1}=? $ \\
+c) $ Igaz-e, \ hogy \ L_{1}^{*}=L_{2}^{*} \ ? \ Ha\ nem,\ miert?\ Ha\ igen\,\ mi\ ez\ a\ nyelv? $}
+\maketitle
+\subsection{Megoldás}
+Az a) feladatrészre a megoldás a következő: $ L = \{ ab^{n}a^{m}b, \ n,m \in \mathbf{N} \}$, 
+mivel a formális nyelvek metszete nem más
+mint az összeszorzásuk, ez utóbbi pedig konkatenálást (egymás után illesztést) jelent. \\
+A metszet az $ L=\{ ab \} $ lesz, mivel az az az egy szó, ami mindkét nyelvben előfordul. \\\\
+A b) feladatrészre a válaszunk: $ L = \{ ab^{n}ba^{m} \ n,m \in \mathbf{N} \} $.
+Mivel itt az $ \alpha^{-1} $-en nem jelent mást, mint a $ \alpha $ szó tükörképét, ami valójában az őt alkotó
+string-ek fordított sorrendben való egymás utáni leírását takarja. \\\\
+Végezetül a c) feladarészhez érkeztünk. Az $ L^{*} = \bigcup_{n \geq 0} L^{n} $ összefüggés jelentését
+kell itt tulajdonképp tárgyalnunk. Tehát L nyelv iteráltja nem más, mint a szavainak tetszőleges véges sok
+tényezőből álló szorzatainak halmaza. Visszakanyarodva a kérdésünkhöz: az egyenlőség nem teljesül. \\
+Indoklás: mivel $ L_{1}=\{ a, ab, abb, abbb, ... \} $ és $ L_{2}=\{ b, ab, aab, aaab, ... \} $ nyelvek szavainak
+szorzata között $L_{2}$ esetén előállhat pl. 'bab', de az $L_{1}$ nyelvnél ez nem lehetséges, tehát találtunk
+egy ellenpéldát.
+
+\section{Két nyelv metszete és uniója}
+\subsection{Feladat: \\
+Készítsünk két grammatikát, aminek az uniója az alábbi \\ nyelvet generálja:
+$ L=\{ ba^{n}ab^{m}ba \ : \ n,m \in \mathbf{N} \} $}
+\maketitle
+\subsection{Megoldás}
+A nyelvet két részre szedjük és mindkét "részéhez" készítünk egy reguláris grammatikát, majd vesszük a két
+grammatika unióját. Megjegyezzük, hogy két grammatika uniója is reguláris kell legyen.
+A felosztás nézzen ki a következőképp: $ L_{1}=\{ ba^{n}a \ ...\} $ és $ L_{2}=\{ b^{n}ba \ ...\} $.
+Itt fontos megemlíteni, hogy az n hatvány az nyelvenként van érvényben. Tehát az únióban majd végül n és m
+fog szerepelni.
+Az $ G(L_{1})=\{ ..., \ S \rightarrow bA, A \rightarrow aA|a \} $ generálja, a
+$ G(L_{2})=\{ ..., \ S \rightarrow bS|bA, A \rightarrow a \} $ generálja. Ennek a kettőnek a működése
+triviális, azokat most terjedelmi okok miatt nem részletezzük. Végül vesszük a két nyelv unióját, ami
+valójában a szorzatukat (azaz magyarán egymás után helyezésüket, konkatenálásukat) jelenti.
+Ezt úgy érjük el, hogy először a két nyelv terminális jeleinek halmazait diszjunktá tesszük, ez valójában
+a "nagybetűk bevesszőzése".
+Majd az $L_{1}$ nyelvben a zárószimbólumok végét kiegészítjük a $L_{2}$ grammatika
+kezdőszimbólumával, az egyik nyelvből a másikba való átmenet végett. \\\\
+Itt megemlítjük azt, hogy ebben a feladatban az $\epsilon$ sehol sem szerepelt a kezdőszimbólumokból kiindulva,
+így most ezzel nem kell vacakolnunk. De egyébként ha lenne ilyen arra is kitérünk: \\
+Tegyük fel, hogy az $ L_{1} $-ben az $S \rightarrow bA$ helyett az $S \rightarrow bA|\epsilon$ 
+szabály szerepel, ekkor $\epsilon$-t csak egyszerűen kivesszük az unióból és helyére az "átvivőszabályt" 
+írjuk be, ami jelen esetben az $A \rightarrow aS^{'}$. Ez biztosítja, hogy "semmi" generálás után rögtön a
+második nyelv elejére jutunk. Ha az $L_{1}$ és $L_{2}$ nyelvben egyszerre szerepel az $\epsilon$,
+akkor egyszerűen az új kezdőszimbólum jobb oldalára be kell írni az $\epsilon$-t is.
+Ezek után viszont figyeljünk rá, hogy az új kezdőszimbólum nem fordul elő-e a szabályok jobb oldalán. \\\\
+Visszatérve az eredeti feladatunkhoz a megoldás a következőképp alakul: \\
+$$ G=<\{ \{a,b\}, \{S,S^{'},A,A^{'},Q \}, Q, \{ Q \rightarrow bA, \ A \rightarrow aA|aS^{'}, \ S^{'} 
+\rightarrow bS^{'}|bA^{'}, \ A^{'} \rightarrow a \} \}> . $$
+
+\subsection{Feladat: \\
+Készítsünk két grammatikát, aminek a metszete az alábbi \\ nyelvet generálja:
+$ L=\{ \alpha ab^{n}b \ |\ \alpha \in \{ \epsilon, a, b \} \ , \ n \in \mathbf{N} \} $}
+\maketitle
+\subsection{Megoldás}
+A nyelvet két részre szedjük és mindkét "részéhez" készítünk egy reguláris grammatikát, majd vesszük a két
+nyelv metszetét, ami az összeadásukat jelenti. Az összeadás itt valami olyasmit takar, hogy egyik vagy
+másik nyelv generálható, hozzátéve hogy mindkét nyelv nem generálható egyszerre, de legalább az egyik
+mindeképp generálható. \\
+Az $L_{1}=\{ ..., \ aab^{n}b \}$ legyen, az $L_{2}=\{ ..., \ bab^{n}b \}$. Ezek után az $L_{1}$ és $L_{2}$-höz
+késztünk grammatikákat, úgy hogy a kezdő szabályokhoz még egy $\epsilon$-t is beveszünk. \\
+A követkőképpen néznek ki:
+$G(L_{1})=\{ ..., \ S \rightarrow aA|\epsilon,\ A \rightarrow aB,\ B \rightarrow bB|b \}$, valamint
+$G(L_{2})=\{ ..., \ S^{'} \rightarrow bA^{'}|\epsilon,\ A^{'} \rightarrow aB^{'},\ B^{'} \rightarrow bB^{'}|b \}$.
+Már a terminális jelek diszjunktá tétele is megtörtént.
+Ezek után nincs más dolgunk, minthogy bevezetünk egy új kezdőállapotot, amiből elérhetővé tesszük az
+$L_{1}$ és $L_{2}$ béli szavakat is. Tehát $G(L)=\{..., \ Q \rightarrow aA|bA^{'}|\epsilon \}$, majd ezek után
+az összes szabályt változatlanul bemásoljuk:
+$G(L)=\{..., \ Q \rightarrow aA|bA^{'}|\epsilon, A \rightarrow aB, B \rightarrow bB|b, A^{'} \rightarrow aB^{'},
+B^{'} \rightarrow bB^{'}|b \}$. Mivel $Q \rightarrow \epsilon$ szerepel, így át kell néznük, hogy Q nem-e fordul
+elő a szabályok jobb oldalán, de nem. Jók vagyunk! A teljes megoldás így írható fel:
+$$ G(L)=<\{ \{ a,b \}, \{ S,S^{'},A,A^{'},B,B^{'},Q \}, \ Q, \{ Q \rightarrow aA|bA^{'}|\epsilon, A \rightarrow 
+aB, B \rightarrow bB|b, A^{'} \rightarrow aB^{'}, B^{'} \rightarrow bB^{'}|b \}\}> $$
+
+\section{A formális nyelvek mint halmazok}
+\subsection{Feladatok és megoldásai: \\}
+$ V=\{ a,b,c \}, \ W=\{ c,d,e \} .$ \\\\
+$ V*(W \setminus V)*W^* \ =\ \{a,b,c\}*\{d,e\}*\{\epsilon, c, d, e, cd, ec, ed, cde, ecd, ...\} $ \\
+$= \{ad, ae, bd, be, cd, ce\}*\{\epsilon, c, d, e, cd, ec, ed, cde, ecd, ...\} = \{ ad\alpha,
+ae\alpha, bd\alpha, be\alpha, cd\alpha, ce\alpha \} $, ahol $\alpha \in \{c,d,e \}^{*}$ \\\\
+$ (V \setminus W)(W \setminus V) \ =\ \{a,b\}*\{d,e\} = \{ ad, ae, bd, be \} $ \\
+$ V^* \setminus W^*\ \Longrightarrow \ $ Minden lehet vélgülis, csak az $\epsilon$-okat
+és a 'c'-t vettük ki. Tehát minden $\{ a,b,c,d,e \} $-t tartalmazó szó kijöhet, ami nem tartalmaz
+$\epsilon$-t és nem csak 'c'-ből áll (c lehet benne).
+
+
+
+
+
+
+\end{document}
